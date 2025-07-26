@@ -10,6 +10,12 @@ interface AgentMessage {
   topic: string;
 }
 
+interface ParsedMqttMessage {
+  raw_output?: unknown;
+  input?: unknown;
+  [key: string]: unknown;
+}
+
 export default function AgentThinkingProtocol() {
   const [messages, setMessages] = useState<AgentMessage[]>([]);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
@@ -82,17 +88,31 @@ export default function AgentThinkingProtocol() {
           const messageStr = message.toString();
           console.log('Received message:', topic, messageStr);
           
-          let parsedMessage;
+          let parsedMessage: string | ParsedMqttMessage;
           try {
-            parsedMessage = JSON.parse(messageStr);
+            parsedMessage = JSON.parse(messageStr) as ParsedMqttMessage;
           } catch {
             parsedMessage = messageStr;
           }
 
+          const getRawOutput = (): string | object | null => {
+            if (typeof parsedMessage === 'string') {
+              return parsedMessage;
+            }
+            return parsedMessage.raw_output as string | object || parsedMessage;
+          };
+
+          const getInput = (): string | object | null => {
+            if (typeof parsedMessage === 'string') {
+              return null;
+            }
+            return parsedMessage.input as string | object || null;
+          };
+
           const newMessage: AgentMessage = {
             timestamp: new Date(),
-            rawOutput: parsedMessage.raw_output || parsedMessage,
-            input: parsedMessage.input || null,
+            rawOutput: getRawOutput(),
+            input: getInput(),
             topic: topic
           };
 

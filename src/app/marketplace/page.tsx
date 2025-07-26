@@ -542,7 +542,7 @@ export default function AgentMarketplace() {
                       </select>
                       <select
                         value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value as any)}
+                        onChange={(e) => setSortBy(e.target.value as 'rating' | 'price' | 'downloads' | 'newest')}
                         className="px-4 py-3 bg-gray-800/60 border border-gray-600/50 rounded-xl text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent backdrop-blur-sm"
                       >
                         <option value="rating" className="bg-gray-800">Highest Rated</option>
