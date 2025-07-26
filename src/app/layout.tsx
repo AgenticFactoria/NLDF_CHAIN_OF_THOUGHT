@@ -32,8 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/agent-icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/agent-icon.svg" />
+        <link rel="icon" href="/agentic-factoria-logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/agentic-factoria-logo.png" />
+        <link rel="shortcut icon" href="/agentic-factoria-logo.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

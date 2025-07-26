@@ -167,10 +167,18 @@ export default function AgentThinkingProtocol() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
+      {/* Geometric Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 border border-orange-500/20 rotate-45 rounded-lg"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 border border-orange-400/10 rotate-12 rounded-lg"></div>
+        <div className="absolute bottom-32 left-1/4 w-40 h-40 border border-orange-600/15 -rotate-12 rounded-lg"></div>
+        <div className="absolute bottom-20 right-1/3 w-20 h-20 border border-orange-500/10 rotate-45 rounded-lg"></div>
+      </div>
+      
       {/* Background Image */}
       <div 
-        className="absolute inset-0 opacity-20 dark:opacity-25 pointer-events-none"
+        className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
           backgroundImage: 'url(/Agentic%20Factoria.png)',
           backgroundSize: 'cover',
@@ -179,45 +187,47 @@ export default function AgentThinkingProtocol() {
         }}
       />
       <div className="relative z-10">
-      {/* Banner/Logo Space */}
-      <header className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-gray-200 dark:border-gray-700">
+              {/* Banner/Logo Space */}
+        <header className="bg-gray-900/80 backdrop-blur-md border-b border-orange-500/20 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                       <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 {/* Logo */}
-                <div className="w-8 h-8">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" className="w-full h-full">
-                    <circle cx="16" cy="16" r="15" fill="#3b82f6"/>
-                    <circle cx="10" cy="12" r="2" fill="white"/>
-                    <circle cx="22" cy="12" r="2" fill="white"/>
-                    <path d="M10 20c0 3.314 2.686 6 6 6s6-2.686 6-6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                    <circle cx="16" cy="8" r="1.5" fill="white"/>
-                    <path d="M16 6.5V3M13 7.5L11 5.5M19 7.5L21 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
+                <div className="w-12 h-12 rounded-full overflow-hidden shadow-xl border-2 border-orange-500/30">
+                  <img 
+                    src="/agentic-factoria-logo.png" 
+                    alt="Agentic Factoria Logo" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Agent Thinking Protocol
-                </h1>
+                <div>
+                  <h1 className="text-xl font-bold text-white tracking-wide">
+                    AGENT THINKING PROTOCOL
+                  </h1>
+                  <p className="text-xs text-orange-400 font-medium tracking-wider">REAL-TIME MONITORING</p>
+                </div>
               </div>
               
               {/* Navigation Links */}
               <div className="flex items-center space-x-4">
-                <a 
-                  href="/marketplace" 
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-                                    <span>Agent Marketplace</span>
-                </a>
-                
-                {/* Connection Status */}
-                <div className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${connectionStatus === 'connected' ? 'bg-green-500' : connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
-                  <span className={`text-sm font-medium ${getStatusColor()}`}>
-                    {connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1)}
-                  </span>
+                                <div className="flex items-center space-x-4">
+                  <a 
+                    href="/marketplace" 
+                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-xl transition-all duration-200 shadow-lg border border-orange-400/20"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span>MARKETPLACE</span>
+                  </a>
+                  
+                  {/* Connection Status */}
+                  <div className="flex items-center space-x-3 px-4 py-2 bg-gray-800/60 rounded-xl border border-gray-700/50 backdrop-blur-sm">
+                    <div className={`w-3 h-3 rounded-full shadow-lg ${connectionStatus === 'connected' ? 'bg-green-400 shadow-green-400/50' : connectionStatus === 'connecting' ? 'bg-orange-400 shadow-orange-400/50' : 'bg-red-400 shadow-red-400/50'}`}></div>
+                    <span className={`text-sm font-medium tracking-wide ${connectionStatus === 'connected' ? 'text-green-400' : connectionStatus === 'connecting' ? 'text-orange-400' : 'text-red-400'}`}>
+                      {connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1)}
+                    </span>
+                  </div>
                 </div>
               </div>
           </div>
@@ -227,22 +237,31 @@ export default function AgentThinkingProtocol() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Connection Info */}
-        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-500 dark:text-gray-400 font-medium">MQTT URL:</span>
-              <span className="ml-2 text-gray-900 dark:text-white font-mono">wss://supos-ce-instance4.supos.app</span>
+        <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl shadow-2xl border border-orange-500/20 p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <span className="text-orange-400 font-semibold text-xs tracking-wider uppercase">MQTT URL</span>
+              </div>
+              <span className="text-white font-mono text-sm bg-gray-900/50 px-3 py-2 rounded-lg border border-gray-700/50">wss://supos-ce-instance4.supos.app</span>
             </div>
-            <div>
-              <span className="text-gray-500 dark:text-gray-400 font-medium">Port:</span>
-              <span className="ml-2 text-gray-900 dark:text-white font-mono">8084</span>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <span className="text-orange-400 font-semibold text-xs tracking-wider uppercase">PORT</span>
+              </div>
+              <span className="text-white font-mono text-sm bg-gray-900/50 px-3 py-2 rounded-lg border border-gray-700/50">8084</span>
             </div>
-            <div className="md:col-span-2">
-              <span className="text-gray-500 dark:text-gray-400 font-medium">Subscribed Topics:</span>
-              <div className="ml-2 mt-1 space-y-1">
-                <div className="text-gray-900 dark:text-white font-mono text-xs">yangzhi/line1/agent/output/message</div>
-                <div className="text-gray-900 dark:text-white font-mono text-xs">yangzhi/line2/agent/output/message</div>
-                <div className="text-gray-900 dark:text-white font-mono text-xs">yangzhi/line3/agent/output/message</div>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <span className="text-orange-400 font-semibold text-xs tracking-wider uppercase">TOPICS</span>
+              </div>
+              <div className="space-y-1">
+                <div className="text-gray-300 font-mono text-xs bg-gray-900/50 px-3 py-1 rounded border border-gray-700/50">yangzhi/line1/agent/output/message</div>
+                <div className="text-gray-300 font-mono text-xs bg-gray-900/50 px-3 py-1 rounded border border-gray-700/50">yangzhi/line2/agent/output/message</div>
+                <div className="text-gray-300 font-mono text-xs bg-gray-900/50 px-3 py-1 rounded border border-gray-700/50">yangzhi/line3/agent/output/message</div>
               </div>
             </div>
           </div>
@@ -250,98 +269,111 @@ export default function AgentThinkingProtocol() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-            <p className="text-red-800 dark:text-red-300 text-sm font-medium">Error: {error}</p>
+          <div className="bg-red-500/10 backdrop-blur-md border border-red-500/30 rounded-2xl p-4 mb-8">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              <span className="text-red-400 font-semibold text-xs tracking-wider uppercase">ERROR</span>
+            </div>
+            <p className="text-red-300 text-sm font-medium mt-2">{error}</p>
           </div>
         )}
 
         {/* Messages Display */}
-        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl shadow-2xl border border-orange-500/20">
+          <div className="p-6 border-b border-orange-500/20">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Real-time Agent Messages</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  {messages.length} message{messages.length !== 1 ? 's' : ''} received
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                  <h2 className="text-xl font-bold text-white tracking-wide">REAL-TIME AGENT MESSAGES</h2>
+                </div>
+                <p className="text-orange-400 text-sm font-medium mt-1 tracking-wide">
+                  {messages.length} MESSAGE{messages.length !== 1 ? 'S' : ''} RECEIVED
                 </p>
               </div>
               <button
                 onClick={clearMessages}
-                className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-gray-700/50 hover:bg-gray-600/50 rounded-xl transition-all duration-200 border border-gray-600/50 backdrop-blur-sm"
                 disabled={messages.length === 0}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                <span>Clear</span>
+                <span>CLEAR</span>
               </button>
             </div>
           </div>
 
           <div className="max-h-96 overflow-y-auto">
             {messages.length === 0 ? (
-              <div className="p-8 text-center">
-                <div className="text-gray-400 dark:text-gray-500 mb-2">
-                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-12 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-2xl flex items-center justify-center border border-orange-500/30">
+                  <svg className="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400">Waiting for agent messages...</p>
+                <p className="text-gray-400 font-medium tracking-wide">WAITING FOR AGENT MESSAGES...</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="divide-y divide-orange-500/10">
                 {messages.map((message, index) => {
                   // Extract line number from topic
                   const lineMatch = message.topic.match(/line(\d+)/);
                   const lineNumber = lineMatch ? lineMatch[1] : '?';
                   const lineColors = {
-                    '1': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-                    '2': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', 
-                    '3': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                    '1': 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+                    '2': 'bg-green-500/20 text-green-300 border-green-500/30', 
+                    '3': 'bg-purple-500/20 text-purple-300 border-purple-500/30'
                   };
-                  const lineColor = lineColors[lineNumber as keyof typeof lineColors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+                  const lineColor = lineColors[lineNumber as keyof typeof lineColors] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
                   
                   return (
-                    <div key={index} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs font-mono text-gray-500 dark:text-gray-400">
+                    <div key={index} className="p-6 hover:bg-orange-500/5 transition-all duration-200 border-l-2 border-transparent hover:border-orange-500/50">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-xs font-mono text-orange-400 bg-gray-900/50 px-3 py-1 rounded-lg border border-gray-700/50">
                             {formatTimestamp(message.timestamp)}
                           </span>
-                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${lineColor}`}>
-                            Line {lineNumber}
+                          <span className={`text-xs px-3 py-1 rounded-lg font-medium border ${lineColor}`}>
+                            LINE {lineNumber}
                           </span>
                         </div>
-                        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                        <span className="text-xs text-orange-500 font-bold bg-orange-500/10 px-2 py-1 rounded border border-orange-500/30">
                           #{index + 1}
                         </span>
                       </div>
                     
-                    <div className="space-y-2">
-                      {message.rawOutput !== null && (
-                        <div>
-                          <span className="text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide">Raw Output:</span>
-                          <pre className="mt-1 text-sm bg-gray-100 dark:bg-gray-700 rounded p-2 font-mono overflow-x-auto">
-                            {typeof message.rawOutput === 'object' 
-                              ? JSON.stringify(message.rawOutput, null, 2)
-                              : String(message.rawOutput)
-                            }
-                          </pre>
-                        </div>
-                      )}
-                      
-                      {message.input !== null && (
-                        <div>
-                          <span className="text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide">Input:</span>
-                          <pre className="mt-1 text-sm bg-gray-100 dark:bg-gray-700 rounded p-2 font-mono overflow-x-auto">
-                            {typeof message.input === 'object' 
-                              ? JSON.stringify(message.input, null, 2)
-                              : String(message.input)
-                            }
-                          </pre>
-                        </div>
-                      )}
-                    </div>
+                                          <div className="space-y-4">
+                        {message.rawOutput !== null && (
+                          <div>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                              <span className="text-xs font-semibold text-orange-400 uppercase tracking-wider">RAW OUTPUT</span>
+                            </div>
+                            <pre className="text-sm bg-gray-900/50 border border-gray-700/50 rounded-lg p-4 font-mono overflow-x-auto text-gray-300 backdrop-blur-sm">
+                              {typeof message.rawOutput === 'object' 
+                                ? JSON.stringify(message.rawOutput, null, 2)
+                                : String(message.rawOutput)
+                              }
+                            </pre>
+                          </div>
+                        )}
+                        
+                        {message.input !== null && (
+                          <div>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                              <span className="text-xs font-semibold text-orange-400 uppercase tracking-wider">INPUT</span>
+                            </div>
+                            <pre className="text-sm bg-gray-900/50 border border-gray-700/50 rounded-lg p-4 font-mono overflow-x-auto text-gray-300 backdrop-blur-sm">
+                              {typeof message.input === 'object' 
+                                ? JSON.stringify(message.input, null, 2)
+                                : String(message.input)
+                              }
+                            </pre>
+                          </div>
+                        )}
+                      </div>
                   </div>
                   );
                 })}
