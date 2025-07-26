@@ -16,6 +16,7 @@ export default function AgentThinkingProtocol() {
   const [error, setError] = useState<string | null>(null);
   const clientRef = useRef<mqtt.MqttClient | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const isConnectingRef = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -26,15 +27,24 @@ export default function AgentThinkingProtocol() {
   }, [messages]);
 
   useEffect(() => {
+    // Prevent multiple connections during hydration
+    if (isConnectingRef.current || clientRef.current) {
+      return;
+    }
+
+    isConnectingRef.current = true;
+
     // MQTT connection setup
     const options = {
       clean: true,
       connectTimeout: 4000,
-      clientId: 'emqx_test',
+      clientId: `emqx_test_${Date.now()}`, // Make clientId unique to prevent conflicts
       rejectUnauthorized: false,
+      keepalive: 60,
+      reconnectPeriod: 5000, // Reconnect every 5 seconds if connection is lost
     };
 
-    const connectUrl = 'ws://supos-ce-instance4.supos.app:8083/mqtt';
+    const connectUrl = 'wss://supos-ce-instance4.supos.app:8084/mqtt';
     
     setConnectionStatus('connecting');
     setError(null);
@@ -46,14 +56,24 @@ export default function AgentThinkingProtocol() {
       client.on('connect', function () {
         console.log('Connected to MQTT broker');
         setConnectionStatus('connected');
+        isConnectingRef.current = false;
         
-        client.subscribe('yangzhi/line1/agent/output/message', function (err) {
-          if (err) {
-            console.error('Subscription error:', err);
-            setError(`Subscription failed: ${err.message}`);
-          } else {
-            console.log('Successfully subscribed to topic');
-          }
+        // Subscribe to all three lines
+        const topics = [
+          'yangzhi/line1/agent/output/message',
+          'yangzhi/line2/agent/output/message',
+          'yangzhi/line3/agent/output/message'
+        ];
+        
+        topics.forEach(topic => {
+          client.subscribe(topic, function (err) {
+            if (err) {
+              console.error(`Subscription error for ${topic}:`, err);
+              setError(`Subscription failed for ${topic}: ${err.message}`);
+            } else {
+              console.log(`Successfully subscribed to ${topic}`);
+            }
+          });
         });
       });
 
@@ -86,6 +106,7 @@ export default function AgentThinkingProtocol() {
         console.error('MQTT Error:', error);
         setConnectionStatus('disconnected');
         setError(`Connection error: ${error.message}`);
+        isConnectingRef.current = false;
       });
 
       client.on('offline', function () {
@@ -98,18 +119,28 @@ export default function AgentThinkingProtocol() {
         setConnectionStatus('connecting');
       });
 
+      client.on('close', function () {
+        console.log('MQTT connection closed');
+        setConnectionStatus('disconnected');
+        isConnectingRef.current = false;
+      });
+
     } catch (err) {
       console.error('Failed to connect:', err);
       setConnectionStatus('disconnected');
       setError('Failed to establish connection');
+      isConnectingRef.current = false;
     }
 
     return () => {
+      console.log('Cleaning up MQTT connection');
       if (clientRef.current) {
-        clientRef.current.end();
+        clientRef.current.end(true); // Force close
+        clientRef.current = null;
       }
+      isConnectingRef.current = false;
     };
-  }, []);
+  }, []); // Empty dependency array - only run once
 
   const getStatusColor = () => {
     switch (connectionStatus) {
@@ -128,6 +159,11 @@ export default function AgentThinkingProtocol() {
       second: '2-digit',
       fractionalSecondDigits: 3
     });
+  };
+
+  const clearMessages = () => {
+    setMessages([]);
+    setError(null);
   };
 
   return (
@@ -179,18 +215,22 @@ export default function AgentThinkingProtocol() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Connection Info */}
         <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-gray-500 dark:text-gray-400 font-medium">MQTT URL:</span>
-              <span className="ml-2 text-gray-900 dark:text-white font-mono">ws://supos-ce-instance4.supos.app</span>
+              <span className="ml-2 text-gray-900 dark:text-white font-mono">wss://supos-ce-instance4.supos.app</span>
             </div>
             <div>
               <span className="text-gray-500 dark:text-gray-400 font-medium">Port:</span>
-              <span className="ml-2 text-gray-900 dark:text-white font-mono">8083</span>
+              <span className="ml-2 text-gray-900 dark:text-white font-mono">8084</span>
             </div>
-            <div>
-              <span className="text-gray-500 dark:text-gray-400 font-medium">Topic:</span>
-              <span className="ml-2 text-gray-900 dark:text-white font-mono">yangzhi/line1/agent/output/message</span>
+            <div className="md:col-span-2">
+              <span className="text-gray-500 dark:text-gray-400 font-medium">Subscribed Topics:</span>
+              <div className="ml-2 mt-1 space-y-1">
+                <div className="text-gray-900 dark:text-white font-mono text-xs">yangzhi/line1/agent/output/message</div>
+                <div className="text-gray-900 dark:text-white font-mono text-xs">yangzhi/line2/agent/output/message</div>
+                <div className="text-gray-900 dark:text-white font-mono text-xs">yangzhi/line3/agent/output/message</div>
+              </div>
             </div>
           </div>
         </div>
@@ -205,10 +245,24 @@ export default function AgentThinkingProtocol() {
         {/* Messages Display */}
         <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Real-time Agent Messages</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              {messages.length} message{messages.length !== 1 ? 's' : ''} received
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Real-time Agent Messages</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  {messages.length} message{messages.length !== 1 ? 's' : ''} received
+                </p>
+              </div>
+              <button
+                onClick={clearMessages}
+                className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                disabled={messages.length === 0}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Clear</span>
+              </button>
+            </div>
           </div>
 
           <div className="max-h-96 overflow-y-auto">
@@ -223,16 +277,32 @@ export default function AgentThinkingProtocol() {
               </div>
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                {messages.map((message, index) => (
-                  <div key={index} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-xs font-mono text-gray-500 dark:text-gray-400">
-                        {formatTimestamp(message.timestamp)}
-                      </span>
-                      <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                        #{index + 1}
-                      </span>
-                    </div>
+                {messages.map((message, index) => {
+                  // Extract line number from topic
+                  const lineMatch = message.topic.match(/line(\d+)/);
+                  const lineNumber = lineMatch ? lineMatch[1] : '?';
+                  const lineColors = {
+                    '1': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                    '2': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', 
+                    '3': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                  };
+                  const lineColor = lineColors[lineNumber as keyof typeof lineColors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+                  
+                  return (
+                    <div key={index} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs font-mono text-gray-500 dark:text-gray-400">
+                            {formatTimestamp(message.timestamp)}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${lineColor}`}>
+                            Line {lineNumber}
+                          </span>
+                        </div>
+                        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                          #{index + 1}
+                        </span>
+                      </div>
                     
                     <div className="space-y-2">
                       {message.rawOutput !== null && (
@@ -260,7 +330,8 @@ export default function AgentThinkingProtocol() {
                       )}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
                 <div ref={messagesEndRef} />
               </div>
             )}
