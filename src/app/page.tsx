@@ -5,8 +5,8 @@ import mqtt from 'mqtt';
 
 interface AgentMessage {
   timestamp: Date;
-  rawOutput: any;
-  input: any;
+  rawOutput: string | object | null;
+  input: string | object | null;
   topic: string;
 }
 
