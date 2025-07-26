@@ -182,31 +182,44 @@ export default function AgentThinkingProtocol() {
       {/* Banner/Logo Space */}
       <header className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              {/* Logo */}
-              <div className="w-8 h-8">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" className="w-full h-full">
-                  <circle cx="16" cy="16" r="15" fill="#3b82f6"/>
-                  <circle cx="10" cy="12" r="2" fill="white"/>
-                  <circle cx="22" cy="12" r="2" fill="white"/>
-                  <path d="M10 20c0 3.314 2.686 6 6 6s6-2.686 6-6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  <circle cx="16" cy="8" r="1.5" fill="white"/>
-                  <path d="M16 6.5V3M13 7.5L11 5.5M19 7.5L21 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+                      <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                {/* Logo */}
+                <div className="w-8 h-8">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" className="w-full h-full">
+                    <circle cx="16" cy="16" r="15" fill="#3b82f6"/>
+                    <circle cx="10" cy="12" r="2" fill="white"/>
+                    <circle cx="22" cy="12" r="2" fill="white"/>
+                    <path d="M10 20c0 3.314 2.686 6 6 6s6-2.686 6-6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                    <circle cx="16" cy="8" r="1.5" fill="white"/>
+                    <path d="M16 6.5V3M13 7.5L11 5.5M19 7.5L21 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Agent Thinking Protocol
+                </h1>
               </div>
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Agent Thinking Protocol
-              </h1>
-            </div>
-            
-            {/* Connection Status */}
-            <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${connectionStatus === 'connected' ? 'bg-green-500' : connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
-              <span className={`text-sm font-medium ${getStatusColor()}`}>
-                {connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1)}
-              </span>
-            </div>
+              
+              {/* Navigation Links */}
+              <div className="flex items-center space-x-4">
+                <a 
+                  href="/marketplace" 
+                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                                    <span>Agent Marketplace</span>
+                </a>
+                
+                {/* Connection Status */}
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${connectionStatus === 'connected' ? 'bg-green-500' : connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                  <span className={`text-sm font-medium ${getStatusColor()}`}>
+                    {connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1)}
+                  </span>
+                </div>
+              </div>
           </div>
         </div>
       </header>
